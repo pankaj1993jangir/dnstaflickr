@@ -5,14 +5,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="?android:colorPrimary"
             android:padding="10dp">
 
         <ImageView
                 android:id="@+id/image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentRight="true"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_margin="15dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,14 +20,13 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:maxLines="2"
-                android:textColor="@android:color/black"
-                android:textSize="14dp"
+                android:layout_marginStart="20dp"
                 android:ellipsize="marquee"
-                app:layout_constraintLeft_toRightOf="@+id/image"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Fixing some of non-vital code" />
+                android:maxLines="2"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image" />
 
         <TextView
                 android:id="@+id/userName"
@@ -36,47 +35,10 @@
                 android:layout_below="@+id/title"
                 android:alpha="0.8"
                 android:textColor="@android:color/black"
-                android:textSize="10dp"
+                android:textSize="8dp"
                 android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image"
-                tools:text="Derick S Samson" />
-
-        <TextView
-                android:id="@+id/createdAt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/userName"
-                android:alpha="0.5"
-                android:padding="5dp"
-                android:textColor="@android:color/black"
-                android:textSize="9dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/separator"
-                tools:text="12th April,2021 10:00PM" />
-
-        <TextView
-                android:id="@+id/separator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="→"
-                android:paddingBottom="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/closedAt" />
-
-        <TextView
-                android:id="@+id/closedAt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:alpha="0.7"
-                android:padding="5dp"
-                android:textColor="@android:color/holo_red_light"
-                android:textSize="11dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                tools:text="12th April,2021 10:12PM" />
+                app:layout_constraintTop_toBottomOf="@+id/image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

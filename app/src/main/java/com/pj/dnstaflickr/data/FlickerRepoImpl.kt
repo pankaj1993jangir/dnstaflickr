@@ -30,4 +30,12 @@ class FlickerRepoImpl : FlickerRepo {
             mutableList
         }
     }
+
+    companion object {
+        private var INSTANCE: FlickerRepo? = null
+        fun getInstance() = INSTANCE
+            ?: FlickerRepoImpl().also {
+                INSTANCE = it
+            }
+    }
 }

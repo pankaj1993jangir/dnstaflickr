@@ -14,6 +14,7 @@ interface FlickerPhotoService {
         @Query("tags") tags: String,
         @Query("format") format: String = "json",
         @Query("nojsoncallback") nojsoncallback: Int = 1,
-        @Query("per_page") page: Int
+        @Query("per_page") perPage: Int = 10,
+        @Query("page") page: Int
     ): Observable<PhotosResponseJson>
 }
