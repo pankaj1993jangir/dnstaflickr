@@ -9,6 +9,8 @@ import io.reactivex.schedulers.Schedulers
 class PhotoViewModel : BaseViewModel() {
     val photoListLive = MutableLiveData<List<Photo>>()
 
+    val itemClick = MutableLiveData<Photo>()
+
     var pageCount = 1
 
     fun fetchRepoList() {

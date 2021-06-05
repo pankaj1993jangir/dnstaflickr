@@ -22,13 +22,16 @@ class FlickerRepoImpl : FlickerRepo {
             response?.photos?.photo?.map { photo ->
                 mutableList.add(
                     Photo(
-                        photo.id, photo.owner, photo.secret,
-                        photo.server, photo.farm, photo.title
+                        photo.id, generateImageUrl(photo.farm, photo.server, photo.id, photo.secret), photo.title
                     )
                 )
             }
             mutableList
         }
+    }
+
+    fun generateImageUrl(farm: Int, server: String, id: String, secret: String): String {
+        return "https://farm$farm.staticflickr.com/$server/$id" + "_" + secret + "_m.jpg"
     }
 
     companion object {

@@ -11,11 +11,6 @@ class PhotoViewHolder(private val binding: ItemFlickrBinding) :
     fun setViewModel(item: Photo) {
         binding.title.setText(item.title)
         binding.userName.setText(item.id)
-        binding.image.load(generateImageUrl(item.farm, item.server, item.id, item.secret))
-    }
-
-
-    fun generateImageUrl(farm: Int, server: String, id: String, secret: String): String {
-        return "https://farm$farm.staticflickr.com/$server/$id" + "_" + secret + "_m.jpg"
+        binding.image.load(item.url)
     }
 }

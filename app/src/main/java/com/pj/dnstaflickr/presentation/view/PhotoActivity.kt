@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,19 +15,22 @@ import com.pj.dnstaflickr.databinding.ActivityMainBinding
 import com.pj.dnstaflickr.presentation.viewmodel.PhotoViewModel
 
 
-class MainActivity : AppCompatActivity() {
+class PhotoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewmodel: PhotoViewModel
+    private var currentFragment : Fragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewmodel = ViewModelProviders.of(this@MainActivity).get(PhotoViewModel::class.java)
-        setRecyclerView()
+        viewmodel = ViewModelProviders.of(this@PhotoActivity).get(PhotoViewModel::class.java)
+        setPhotosRecyclerView()
+        setObservers()
+        FetchPhotosAndSetPagination()
     }
 
-    fun setRecyclerView() {
-        val adapter = PhotoAdapter()
+    fun setPhotosRecyclerView() {
+        val adapter = PhotoAdapter(this)
         val layoutManager = LinearLayoutManager(applicationContext)
         binding.rvPhotos.setLayoutManager(layoutManager)
         binding.rvPhotos.setAdapter(adapter)
@@ -36,6 +40,25 @@ class MainActivity : AppCompatActivity() {
         viewmodel.photoListLive.observe(this, Observer {
             adapter.addItems(it)
         })
+    }
+
+    fun setObservers() {
+        viewmodel.itemClick.observe(this, {
+            openPhotoDetailFragment(PhotoDetailFragment.newInstance(it.url, it.title))
+        })
+    }
+
+    fun openPhotoDetailFragment(fragment: Fragment) {
+        if(currentFragment!=null){
+            supportFragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
+        }
+        supportFragmentManager.beginTransaction().replace(binding.fragment.id, fragment)
+            .addToBackStack(null).commit()
+        binding.fragment.visibility = View.VISIBLE
+        currentFragment = fragment
+    }
+
+    fun FetchPhotosAndSetPagination() {
         viewmodel.fetchRepoList()
         binding.nestedSv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
@@ -43,5 +66,10 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.fetchRepoList()
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.fragment.visibility = View.GONE
     }
 }
