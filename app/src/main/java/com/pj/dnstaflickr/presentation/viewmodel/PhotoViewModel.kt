@@ -1,5 +1,6 @@
 package com.pj.dnstaflickr.presentation.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.pj.dnstaflickr.data.FlickerRepoImpl
@@ -18,6 +19,7 @@ class PhotoViewModel(private val app: Application) : BaseViewModel(app) {
     var previousTagQuery = ""
     var newTagQuery = true
 
+    @SuppressLint("CheckResult")
     fun fetchRepoList(tag: String = "funny") {
         dataLoading.value = true
         if (previousTagQuery != tag) {

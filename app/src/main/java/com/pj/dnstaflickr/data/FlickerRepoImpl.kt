@@ -1,6 +1,7 @@
 package com.pj.dnstaflickr.data
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.pj.dnstaflickr.domain.repository.FlickerRepo
 import com.pj.dnstaflickr.data.service.FlickerPhotoService
 import com.pj.dnstaflickr.data.service.PreferenceService
@@ -9,13 +10,8 @@ import com.pj.dnstaflickr.domain.entity.Photo
 import io.reactivex.Observable
 
 class FlickerRepoImpl(context: Context) : FlickerRepo {
-    private var service: FlickerPhotoService
-    var preferenceService: PreferenceService
-
-    init {
-        service = RetroApiClient().flikrService
-        preferenceService = PreferenceService.getInstance(context)
-    }
+    private var service: FlickerPhotoService = RetroApiClient().flikrService
+    private var preferenceService: PreferenceService = PreferenceService.getInstance(context)
 
     override fun getPhotos(
         tag: String,
@@ -39,7 +35,8 @@ class FlickerRepoImpl(context: Context) : FlickerRepo {
     }
 
 
-    private fun generateImageUrl(farm: Int, server: String, id: String, secret: String): String {
+    @VisibleForTesting
+    fun generateImageUrl(farm: Int, server: String, id: String, secret: String): String {
         return "https://farm${farm}.staticflickr.com/${server}/${id}_${secret}_m.jpg"
     }
 

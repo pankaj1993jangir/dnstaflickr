@@ -10,7 +10,7 @@ private const val KEY_PHOTO_RESPONSE = "key.photo.response"
 private const val KEY_PREV_QUERY = "key.prev.query"
 
 class PreferenceService(context: Context) {
-    var service = context.getSharedPreferences(SHARED_PREF_STORE, Context.MODE_PRIVATE)
+    private var service = context.getSharedPreferences(SHARED_PREF_STORE, Context.MODE_PRIVATE)
     var gson = Gson()
 
     fun getCachedResponse(): List<Photo> {
