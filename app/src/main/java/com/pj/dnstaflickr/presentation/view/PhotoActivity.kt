@@ -28,6 +28,7 @@ class PhotoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setSupportActionBar(binding.toolbar)
         viewmodel = ViewModelProviders.of(this@PhotoActivity).get(PhotoViewModel::class.java)
         tag = PreferenceService.getInstance(this).getPrevQueryTag()
         setPhotosRecyclerView()
