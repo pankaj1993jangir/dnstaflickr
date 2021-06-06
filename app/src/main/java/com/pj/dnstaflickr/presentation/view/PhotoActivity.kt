@@ -19,7 +19,7 @@ class PhotoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewmodel: PhotoViewModel
-    private var currentFragment : Fragment? = null
+    private var currentFragment: Fragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -37,8 +37,11 @@ class PhotoActivity : AppCompatActivity() {
         val dividerItemDecoration =
             DividerItemDecoration(binding.rvPhotos.getContext(), LinearLayoutManager.VERTICAL)
         binding.rvPhotos.addItemDecoration(dividerItemDecoration)
-        viewmodel.photoListLive.observe(this, Observer {
-            adapter.addItems(it)
+        viewmodel.latestPhotoListLive.observe(this, Observer {
+            adapter.addOrAppendItems(it)
+        })
+        viewmodel.cachedPhotoListLive.observe(this, {
+            adapter.updateItems(it)
         })
     }
 
@@ -49,7 +52,7 @@ class PhotoActivity : AppCompatActivity() {
     }
 
     fun openPhotoDetailFragment(fragment: Fragment) {
-        if(currentFragment!=null){
+        if (currentFragment != null) {
             supportFragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
         }
         supportFragmentManager.beginTransaction().replace(binding.fragment.id, fragment)

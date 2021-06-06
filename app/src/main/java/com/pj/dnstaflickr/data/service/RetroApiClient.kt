@@ -14,5 +14,5 @@ class RetroApiClient {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 
-    var redMartService: FlickerPhotoService = retrofit.create(FlickerPhotoService::class.java)
+    var flikrService: FlickerPhotoService = retrofit.create(FlickerPhotoService::class.java)
 }

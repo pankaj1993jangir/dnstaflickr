@@ -36,9 +36,14 @@ class PhotoAdapter(private val context: Context) : RecyclerView.Adapter<PhotoVie
         }
     }
 
-    fun addItems(listItems: List<Photo>) {
-        if (list == null) {
-            list = ArrayList()
+    fun addOrAppendItems(listItems: List<Photo>) {
+        list.addAll(listItems)
+        notifyDataSetChanged()
+    }
+
+    fun updateItems(listItems: List<Photo>) {
+        if (list.isNotEmpty()) {
+            return
         }
         list.addAll(listItems)
         notifyDataSetChanged()
