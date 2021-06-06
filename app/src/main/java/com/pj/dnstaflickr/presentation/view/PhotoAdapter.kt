@@ -42,10 +42,7 @@ class PhotoAdapter(private val context: Context) : RecyclerView.Adapter<PhotoVie
     }
 
     fun updateItems(listItems: List<Photo>) {
-        if (list.isNotEmpty()) {
-            return
-        }
-        list.addAll(listItems)
+        list = listItems.toMutableList()
         notifyDataSetChanged()
     }
 

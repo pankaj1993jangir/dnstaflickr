@@ -9,28 +9,39 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class PhotoViewModel(private val app: Application) : BaseViewModel(app) {
-    val latestPhotoListLive = MutableLiveData<List<Photo>>()
-    val cachedPhotoListLive = MutableLiveData<List<Photo>>()
+    val paginationPhotoListLive = MutableLiveData<List<Photo>>()
+    val replacePhotoListLive = MutableLiveData<List<Photo>>()
 
     val itemClick = MutableLiveData<Photo>()
 
     var pageCount = 1
+    var preTagQuery = ""
+    var newTagQuery = true
 
-    fun fetchRepoList() {
+    fun fetchRepoList(tag: String = "funny") {
         dataLoading.value = true
-
-        FlickerRepoImpl.getInstance(app.applicationContext).getPhotos("funny", pageCount++)
+        if (!preTagQuery.equals(tag)) {
+            preTagQuery = tag
+            pageCount = 1
+            newTagQuery = true
+        }
+        FlickerRepoImpl.getInstance(app.applicationContext).getPhotos(tag, pageCount++)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ photos ->
                 dataLoading.value = false
                 empty.value = false
-                latestPhotoListLive.value = photos
+                if (newTagQuery) {
+                    replacePhotoListLive.value = photos
+                    newTagQuery = false
+                } else {
+                    paginationPhotoListLive.value = photos
+                }
             },
                 { error ->
                     dataLoading.value = false
                     empty.value = false
-                    cachedPhotoListLive.value =
+                    replacePhotoListLive.value =
                         PreferenceService.getInstance(app.applicationContext).getCachedResponse()
                 }
             )

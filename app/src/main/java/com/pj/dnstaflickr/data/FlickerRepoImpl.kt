@@ -32,6 +32,7 @@ class FlickerRepoImpl(context: Context) : FlickerRepo {
                     )
                 )
             }
+            preferenceService.updatePrevQuery(tag)
             preferenceService.updateCachedResponse(mutableList)
             mutableList
         }
@@ -39,7 +40,7 @@ class FlickerRepoImpl(context: Context) : FlickerRepo {
 
 
     fun generateImageUrl(farm: Int, server: String, id: String, secret: String): String {
-        return "https://farm$farm.staticflickr.com/$server/$id" + "_" + secret + "_m.jpg"
+        return "https://farm${farm}.staticflickr.com/${server}/${id}_${secret}_m.jpg"
     }
 
     companion object {

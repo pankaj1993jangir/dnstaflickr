@@ -7,6 +7,7 @@ import com.pj.dnstaflickr.domain.entity.Photo
 
 private const val SHARED_PREF_STORE = "dnstaflickerStore"
 private const val KEY_PHOTO_RESPONSE = "key.photo.response"
+private const val KEY_PREV_QUERY = "key.prev.query"
 
 class PreferenceService(context: Context) {
     var service = context.getSharedPreferences(SHARED_PREF_STORE, Context.MODE_PRIVATE)
@@ -31,5 +32,13 @@ class PreferenceService(context: Context) {
             ?: PreferenceService(context).also {
                 INSTANCE = it
             }
+    }
+
+    fun updatePrevQuery(tag: String) {
+        service.edit().putString(KEY_PREV_QUERY, tag).apply()
+    }
+
+    fun getPrevQueryTag(): String {
+        return service.getString(KEY_PREV_QUERY, null) ?: "meditation"
     }
 }

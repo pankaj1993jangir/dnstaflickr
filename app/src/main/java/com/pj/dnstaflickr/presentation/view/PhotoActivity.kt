@@ -1,7 +1,10 @@
 package com.pj.dnstaflickr.presentation.view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
@@ -11,25 +14,28 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pj.dnstaflickr.R
+import com.pj.dnstaflickr.data.service.PreferenceService
 import com.pj.dnstaflickr.databinding.ActivityMainBinding
 import com.pj.dnstaflickr.presentation.viewmodel.PhotoViewModel
-
 
 class PhotoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewmodel: PhotoViewModel
     private var currentFragment: Fragment? = null
+    private lateinit var tag: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewmodel = ViewModelProviders.of(this@PhotoActivity).get(PhotoViewModel::class.java)
+        tag = PreferenceService.getInstance(this).getPrevQueryTag()
         setPhotosRecyclerView()
         setObservers()
         FetchPhotosAndSetPagination()
     }
 
-    fun setPhotosRecyclerView() {
+    private fun setPhotosRecyclerView() {
         val adapter = PhotoAdapter(this)
         val layoutManager = LinearLayoutManager(applicationContext)
         binding.rvPhotos.setLayoutManager(layoutManager)
@@ -37,21 +43,21 @@ class PhotoActivity : AppCompatActivity() {
         val dividerItemDecoration =
             DividerItemDecoration(binding.rvPhotos.getContext(), LinearLayoutManager.VERTICAL)
         binding.rvPhotos.addItemDecoration(dividerItemDecoration)
-        viewmodel.latestPhotoListLive.observe(this, Observer {
+        viewmodel.paginationPhotoListLive.observe(this, Observer {
             adapter.addOrAppendItems(it)
         })
-        viewmodel.cachedPhotoListLive.observe(this, {
+        viewmodel.replacePhotoListLive.observe(this, {
             adapter.updateItems(it)
         })
     }
 
-    fun setObservers() {
+    private fun setObservers() {
         viewmodel.itemClick.observe(this, {
             openPhotoDetailFragment(PhotoDetailFragment.newInstance(it.url, it.title))
         })
     }
 
-    fun openPhotoDetailFragment(fragment: Fragment) {
+    private fun openPhotoDetailFragment(fragment: Fragment) {
         if (currentFragment != null) {
             supportFragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
         }
@@ -61,12 +67,12 @@ class PhotoActivity : AppCompatActivity() {
         currentFragment = fragment
     }
 
-    fun FetchPhotosAndSetPagination() {
-        viewmodel.fetchRepoList()
+    private fun FetchPhotosAndSetPagination() {
+        viewmodel.fetchRepoList(tag)
         binding.nestedSv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
                 binding.pbLoader.visibility = View.VISIBLE
-                viewmodel.fetchRepoList()
+                viewmodel.fetchRepoList(tag)
             }
         })
     }
@@ -74,5 +80,26 @@ class PhotoActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.fragment.visibility = View.GONE
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        val search = menu.findItem(R.id.appSearchBar)
+        val searchView = search.actionView as SearchView
+        searchView.queryHint = getString(R.string.search_here)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    tag = it
+                    viewmodel.fetchRepoList(tag)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
 }
