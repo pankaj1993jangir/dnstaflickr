@@ -2,7 +2,6 @@ package com.pj.dnstaflickr.presentation.view
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -33,16 +32,16 @@ class PhotoActivity : AppCompatActivity() {
         tag = PreferenceService.getInstance(this).getPrevQueryTag()
         setPhotosRecyclerView()
         setObservers()
-        FetchPhotosAndSetPagination()
+        fetchPhotosAndSetPagination()
     }
 
     private fun setPhotosRecyclerView() {
         val adapter = PhotoAdapter(this)
         val layoutManager = LinearLayoutManager(applicationContext)
-        binding.rvPhotos.setLayoutManager(layoutManager)
-        binding.rvPhotos.setAdapter(adapter)
+        binding.rvPhotos.layoutManager = layoutManager
+        binding.rvPhotos.adapter = adapter
         val dividerItemDecoration =
-            DividerItemDecoration(binding.rvPhotos.getContext(), LinearLayoutManager.VERTICAL)
+            DividerItemDecoration(binding.rvPhotos.context, LinearLayoutManager.VERTICAL)
         binding.rvPhotos.addItemDecoration(dividerItemDecoration)
         viewmodel.paginationPhotoListLive.observe(this, Observer {
             adapter.addOrAppendItems(it)
@@ -68,7 +67,7 @@ class PhotoActivity : AppCompatActivity() {
         currentFragment = fragment
     }
 
-    private fun FetchPhotosAndSetPagination() {
+    private fun fetchPhotosAndSetPagination() {
         viewmodel.fetchRepoList(tag)
         binding.nestedSv.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
@@ -102,5 +101,9 @@ class PhotoActivity : AppCompatActivity() {
             }
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }

@@ -40,6 +40,9 @@ class PhotoDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.title.text = title
         binding.ivImage.load(url)
+        binding.ivClose.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
     companion object {

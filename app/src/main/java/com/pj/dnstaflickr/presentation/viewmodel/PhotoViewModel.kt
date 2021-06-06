@@ -15,13 +15,13 @@ class PhotoViewModel(private val app: Application) : BaseViewModel(app) {
     val itemClick = MutableLiveData<Photo>()
 
     var pageCount = 1
-    var preTagQuery = ""
+    var previousTagQuery = ""
     var newTagQuery = true
 
     fun fetchRepoList(tag: String = "funny") {
         dataLoading.value = true
-        if (!preTagQuery.equals(tag)) {
-            preTagQuery = tag
+        if (previousTagQuery != tag) {
+            previousTagQuery = tag
             pageCount = 1
             newTagQuery = true
         }
@@ -38,7 +38,7 @@ class PhotoViewModel(private val app: Application) : BaseViewModel(app) {
                     paginationPhotoListLive.value = photos
                 }
             },
-                { error ->
+                {
                     dataLoading.value = false
                     empty.value = false
                     replacePhotoListLive.value =
@@ -46,6 +46,4 @@ class PhotoViewModel(private val app: Application) : BaseViewModel(app) {
                 }
             )
     }
-
-
 }

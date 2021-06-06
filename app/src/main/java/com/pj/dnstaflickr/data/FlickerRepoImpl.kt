@@ -9,7 +9,7 @@ import com.pj.dnstaflickr.domain.entity.Photo
 import io.reactivex.Observable
 
 class FlickerRepoImpl(context: Context) : FlickerRepo {
-    var service: FlickerPhotoService
+    private var service: FlickerPhotoService
     var preferenceService: PreferenceService
 
     init {
@@ -39,7 +39,7 @@ class FlickerRepoImpl(context: Context) : FlickerRepo {
     }
 
 
-    fun generateImageUrl(farm: Int, server: String, id: String, secret: String): String {
+    private fun generateImageUrl(farm: Int, server: String, id: String, secret: String): String {
         return "https://farm${farm}.staticflickr.com/${server}/${id}_${secret}_m.jpg"
     }
 

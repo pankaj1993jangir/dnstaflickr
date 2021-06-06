@@ -7,10 +7,10 @@ import com.pj.dnstaflickr.domain.entity.Photo
 
 
 class PhotoViewHolder(private val binding: ItemFlickrBinding) :
-    RecyclerView.ViewHolder(binding.getRoot()) {
+    RecyclerView.ViewHolder(binding.root) {
     fun setViewModel(item: Photo) {
-        binding.title.setText(item.title)
-        binding.userName.setText(item.id)
+        binding.title.text = item.title
+        binding.userName.text = item.id
         binding.image.load(item.url)
     }
 }
